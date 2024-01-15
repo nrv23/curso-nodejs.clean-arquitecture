@@ -1,0 +1,21 @@
+{
+  "name": "bases",
+  "version": "0.0.1",
+  "description": "Primer aplicacion real de Nodejs",
+  "main": "app.js",
+  "scripts": {
+    "dev": "nodemon ./src/app.js",
+    "start": "node ./src/app.js"
+  },
+  "author": "Nataniel Rodríguez",
+  "license": "ISC",
+  "devDependencies": {
+    "nodemon": "^3.0.2"
+  },
+  "dependencies": {
+    "axios": "^1.6.4",
+    "get-age": "^1.0.1",
+    "uuid": "^9.0.1",
+    "winston": "^3.11.0"
+  }
+}
