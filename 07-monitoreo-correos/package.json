@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "tsnd --respawn --clear src/app.ts",
+    "dev": "tsnd --respawn  src/app.ts",
     "build": "rimraf ./dist && tsc",
     "start": "npm run build && node dist/app.js"
   },
@@ -23,6 +23,7 @@
     "cron": "^3.1.6",
     "dotenv": "^16.3.1",
     "env-var": "^7.4.1",
+    "mongoose": "^8.0.4",
     "nodemailer": "^6.9.8"
   }
 }

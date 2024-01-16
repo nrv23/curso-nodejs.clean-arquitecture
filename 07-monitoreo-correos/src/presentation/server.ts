@@ -35,8 +35,8 @@ export class Server {
                 ).execute(url);
             }
         );*/
-        new SendLogsEmail(emailService, fileSystemLogRepository)
-            .execute("navemen23@hotmail.com");
+        /* new SendLogsEmail(emailService, fileSystemLogRepository)
+             .execute("navemen23@hotmail.com");*/
 
         console.log(envs);
 

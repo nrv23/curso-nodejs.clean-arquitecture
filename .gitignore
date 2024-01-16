@@ -1,3 +1,6 @@
 **/logs
 **/node_modules 
 notas.txt
+**/.env
+**/.env.template
+**/mongo/
