@@ -46,7 +46,7 @@ export class CheckService implements CheckServiceUseCase {
             const errorMessage = `${error}`;
             const logError = new LogEntity({
                 level: logSeverityLevel.critical,
-                message: `${url} is ok`,
+                message: `${url} failed`,
                 origin: "check-server.ts"
             });
             this.failedCallback && this.failedCallback(errorMessage);
