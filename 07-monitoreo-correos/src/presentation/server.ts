@@ -8,13 +8,24 @@ import { SendLogsEmail } from '../domain/uses-cases/email/send-logs-email.servic
 import { EmailService } from './email/email.service';
 import { MongoLogDataSource } from '../infraestructure/datasources/mongo-log.datasource';
 import { logSeverityLevel } from '../domain/entities/Log.entity';
+import { PostgresLogDataSource } from '../infraestructure/datasources/postgres-log.datasource';
+import { CheckServiceMultiple } from '../domain/uses-cases/checks/checek-service-multiple';
 
 
 
-const logRepository = new LogReopositoryImpl(
-    //new FileSystemDataSource()
+const fsLogRepository = new LogReopositoryImpl(
+    new FileSystemDataSource()
+);
+
+const mongoLogRepository = new LogReopositoryImpl(
     new MongoLogDataSource()
 );
+
+const postgresLogRepository = new LogReopositoryImpl(
+    new PostgresLogDataSource()
+)
+
+
 
 const emailService = new EmailService();
 
@@ -25,16 +36,19 @@ export class Server {
 
         console.log("Servidor corriendo....");
 
-        const logs = await logRepository.getLog(logSeverityLevel.medium);
-        console.log({logs});
-        /* const url = "http://localhost:3001";
+         
+        const url = "http://localhost:3000";
          CronService.createJob(
             "* * * * * *",
             () => {
                 console.log("5 sencods");
                 //new CheckService().execute("https://google.com");
-                new CheckService(
-                    logRepository,
+                new CheckServiceMultiple(
+                    [
+                        fsLogRepository,
+                        mongoLogRepository,
+                        postgresLogRepository
+                    ],
                 
                     //() => console.log(`${url} is ok `),
                     //(error) => console.log({ error }),

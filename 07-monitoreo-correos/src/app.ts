@@ -2,6 +2,7 @@ import { Server } from './presentation/server';
 import { LogModel, MongoDatabase } from './data/mongo';
 import { envs } from './config/plugins/envs';
 import { logSeverityLevel } from './domain/entities/Log.entity';
+import { PrismaClient } from '@prisma/client';
 
 
 (async () => {
@@ -16,6 +17,6 @@ async function main() {
         dbName: envs.MONGO_DB_NAME,
         mongoUrl: envs.MONGO_URL
     });
-
+    
     Server.start()
 }

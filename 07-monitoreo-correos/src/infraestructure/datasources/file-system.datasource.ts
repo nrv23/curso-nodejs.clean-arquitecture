@@ -65,6 +65,8 @@ export class FileSystemDataSource implements LogDataSource {
         else if (log.level === logSeverityLevel.medium) fs.appendFileSync(this.mediumLogsPath, logAsJson);
         else if (log.level === logSeverityLevel.high) fs.appendFileSync(this.highLogsPath, logAsJson);
         else fs.appendFileSync(this.criticalLogsPath, logAsJson);
+
+        console.log("FS log created")
     }
 
     async getLog(severityLevel: logSeverityLevel): Promise<LogEntity[]> {
