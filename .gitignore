@@ -4,3 +4,4 @@ notas.txt
 **/.env
 **/.env.template
 **/mongo/
+**/postgres
