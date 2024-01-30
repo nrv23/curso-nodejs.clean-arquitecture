@@ -1,6 +1,8 @@
 import "dotenv/config";
 import * as env from "env-var";
 
+
+console.log({envs:process.env})
 export const envs = {
     PORT: env.get("PORT").required().asPortNumber(),
     MAILER_EMAIL: env.get("MAILER_EMAIL").required().asEmailString(),

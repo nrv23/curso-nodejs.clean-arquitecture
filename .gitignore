@@ -5,3 +5,5 @@ notas.txt
 **/.env.template
 **/mongo/
 **/postgres
+**/postgres-test
+**/mongo-test
