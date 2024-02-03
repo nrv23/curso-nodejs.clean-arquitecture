@@ -8,3 +8,4 @@ notas.txt
 **/postgres-test
 **/mongo-test
 **/keys
+**/coverage

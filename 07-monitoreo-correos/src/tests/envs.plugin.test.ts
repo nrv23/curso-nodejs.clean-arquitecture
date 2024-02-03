@@ -1,4 +1,4 @@
-import { envs } from './envs';
+import { envs } from '../config/plugins/envs';
 
 
 describe('envs.plugin.ts', () => {
@@ -32,7 +32,7 @@ describe('envs.plugin.ts', () => {
 
         try {
 
-            await import ("./envs");
+            await import ("../config/plugins/envs");
             expect(true).toBe(false);
 
 
