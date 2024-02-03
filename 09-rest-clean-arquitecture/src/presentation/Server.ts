@@ -1,5 +1,6 @@
 import express from 'express';
 import path from 'path/posix';
+import compression from 'compression';
 
 import { Router } from 'express';
 
@@ -32,6 +33,7 @@ export class Server {
                 extended: true
             })
         );
+        this.app.use(compression()); // comprimir respuestas http
         //* public folders
         this.app.use(express.static(this.publicPath));
         this.app.use("/api",this.routes);
