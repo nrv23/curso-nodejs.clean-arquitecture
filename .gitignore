@@ -3,6 +3,7 @@
 notas.txt
 **/.env
 **/.env.template
+**/.env.test
 **/mongo/
 **/postgres
 **/postgres-test
