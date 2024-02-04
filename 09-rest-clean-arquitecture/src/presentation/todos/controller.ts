@@ -1,3 +1,4 @@
+import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
 import { Request, Response } from "express";
 import { CreateTodo, UpdateTodo, GetAllTodos, GetById, DeleteTodo } from "../../domain";
 import { CreateTodoDTO, UpdateTodoDto } from "../../domain/dto";
@@ -10,8 +11,14 @@ export class TodosController {
 
         new GetAllTodos(this.todoRepository)
             .execute()
-            .then( response => res.json({response}))
-            .catch(error => res.status(400).json({error}));
+            .then( response => res.json(response))
+            .catch(error => {
+                if(error instanceof PrismaClientKnownRequestError) {
+                    res.status(500).json(error)
+                } else {
+                    res.status(400).json(error);
+                }
+            });
     };
 
     public getTodoById = (req: Request, res: Response) => {
@@ -19,8 +26,11 @@ export class TodosController {
         const { id } = req.params;
         new GetById(this.todoRepository)
             .execute(+id)
-            .then( response => res.json({response}))
-            .catch(error => res.status(400).json({error}));
+            .then( response => res.json(response))
+            .catch(error => {
+
+                res.status(400).json(error)
+            });
 
     };
 
@@ -35,8 +45,8 @@ export class TodosController {
 
         new CreateTodo(this.todoRepository)
             .execute(createTodoDto!)
-            .then( response => res.json({response}))
-            .catch(error => res.status(400).json({error}));
+            .then( response => res.json(response))
+            .catch(error => res.status(400).json(error));
 
     };
 
@@ -49,12 +59,12 @@ export class TodosController {
             id: +id,
         });
 
-        if (error) return res.status(400).json({ error });
+        if (error) return res.status(400).json(error);
 
         new UpdateTodo(this.todoRepository)
             .execute(updateTodoDto!)
-            .then( response => res.json({response}))
-            .catch(error => res.status(400).json({error}));
+            .then( response => res.json(response))
+            .catch(error => res.status(400).json(error));
 
     };
 
@@ -63,8 +73,8 @@ export class TodosController {
         const { id } = req.params;
         new DeleteTodo(this.todoRepository)
             .execute(+id)
-            .then( response => res.json({response}))
-            .catch(error => res.status(400).json({error}));
+            .then( response => res.json(response))
+            .catch(error => res.status(400).json(error));
 
     };
 }

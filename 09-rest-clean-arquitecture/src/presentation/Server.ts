@@ -12,8 +12,8 @@ interface Props {
 
 export class Server {
 
-    private app = express();
-
+    public readonly app = express();
+    private ServerListener?: any;
     private readonly port: number;
     private readonly publicPath: string;
     private readonly routes: Router;
@@ -46,9 +46,14 @@ export class Server {
             return;
         });  
 
-        this.app.listen(this.port, () => {
+        this.ServerListener = this.app.listen(this.port, () => {
             console.log("Servidor corriendo en servidor "+this.port);
             
         })
+    }
+
+
+    public close() {
+        this.ServerListener?.close();
     }
 }
