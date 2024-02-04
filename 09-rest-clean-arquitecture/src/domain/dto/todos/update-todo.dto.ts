@@ -28,7 +28,7 @@ export class UpdateTodoDto {
 
         if(!id || isNaN(+id)) return ["id no es válido",undefined];
 
-        if (!text) return ["El valor para text es requerido", undefined];
+        //if (!text) return ["El valor para text es requerido", undefined];
 
         if(completedAt) {
             const newCompletedAt = new Date(completedAt);
