@@ -64,9 +64,9 @@ describe('routes.ts', () => {
 
         const { body } = await request(testServer.app)
             .get(`/api/todos/${todoId}`)
-            .expect(400);
+            .expect(404);
 
-        expect(body).toEqual(`Todo with id ${todoId} not found`);
+        expect(body.error).toEqual(`Todo with id ${todoId} not found`);
 
     });
 
@@ -123,8 +123,8 @@ describe('routes.ts', () => {
             completedAt: new Date().toISOString()
         });
 
-        expect(statusCode).toBe(400);
-        expect(body).toBe(`Todo with id ${todoId} not found`)
+        expect(statusCode).toBe(404);
+        expect(body.error).toBe(`Todo with id ${todoId} not found`)
     },6000)
     
     test('Actualizar soloa la fecha del todo por el id', async () => {
@@ -144,7 +144,32 @@ describe('routes.ts', () => {
         expect(body.text).toBe(todos[0].text);
         expect(new Date(body.completedAt).toString()).not.toBe(updateDate);
         expect(statusCode).toBe(200);
-        
+
     }, 6000)
 
+    test('Debe eliminar un todo por ID',async () => {
+
+        const newTodo = await prisma.todo.create({
+            data: todos[0]
+        });
+        const { body, statusCode } = await request(testServer.app)
+            .delete(`/api/todos/${newTodo.id}`)
+            
+        expect(body.id).toBe(newTodo.id);
+        expect(body.text).toBe(todos[0].text);
+        expect(body.completedAt).toBe(null);
+        expect(statusCode).toBe(200);
+
+    });
+
+    test('Debe devolver error 404 si intenta eliminar por Id que no existe', async () => {
+
+        const { body, statusCode } = await request(testServer.app)
+            .delete(`/api/todos/${todoId}`)
+    
+        expect(body.error).toEqual(`Todo with id ${todoId} not found`);
+        expect(statusCode).toBe(404);
+    })
+    
+    
 })

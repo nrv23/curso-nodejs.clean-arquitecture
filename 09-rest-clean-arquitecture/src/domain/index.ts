@@ -1,3 +1,4 @@
+export * from './errors/custom.error';
 export * from './datasources/todo.datasource';
 export * from './entities/todo.entity';
 export * from './dto';

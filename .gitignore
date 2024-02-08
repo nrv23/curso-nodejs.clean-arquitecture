@@ -10,3 +10,5 @@ notas.txt
 **/mongo-test
 **/keys
 **/coverage
+**/dist
+**/build
