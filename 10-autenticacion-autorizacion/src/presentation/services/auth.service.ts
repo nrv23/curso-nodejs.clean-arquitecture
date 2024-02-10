@@ -1,29 +1,34 @@
-import { bcryptAdapter } from "../../config";
+import { bcryptAdapter, envs } from "../../config";
 import { jwtAdapter } from "../../config/jwt-adapter";
 import { UserModel } from "../../data";
 import { CustomError, LoginDto, RegisterUserDto, UserEntity } from "../../domain";
+import { EmailService } from './email.service';
 
 export class AuthService {
 
-    constructor() {
-
-    }
+    constructor(
+        private readonly EmailService:EmailService
+    ) {}
 
     public async registerUser(registerUserDto: RegisterUserDto) {
 
-        const existUser = await UserModel.findOne({
-            email: registerUserDto.email
-        });
-
-        if(existUser) throw CustomError.BadRequest("Email already exists");
-
+    
         try {
+
+            const existUser = await UserModel.findOne({
+                email: registerUserDto.email
+            });
+    
+            if(existUser) throw CustomError.BadRequest("Email already exists");
 
             const user = new UserModel(registerUserDto);
 
             user.password = await bcryptAdapter.hash(user.password);
 
             await user.save();
+
+            // enviar el correo
+             this.sendEmailValidationLink(user.email);
 
             const { password, ...rest } = UserEntity.fromObject(user);
             // omite el password al desestructurarlo y luego el operador ...rest
@@ -69,5 +74,32 @@ export class AuthService {
         } catch (error) {
             throw CustomError.InternalError(`${error}`);
         }
+    }
+
+    private sendEmailValidationLink = async (email: string) =>  {
+
+        const token = await jwtAdapter.genereteToken({
+            email
+        });
+
+        if(!token) throw CustomError.InternalError("Error getting token")
+
+        const link = `${envs.WEBSERVICE_URL}/auth/validate-email/${token}`;
+        const html = `
+            <h1>Validate your email</h1>
+            <p>Click on the following link</p>
+            <a href="${link}">Validate your email: ${email}</a>
+        `;
+
+        const options = {
+            to: email,
+            subject: 'Validate your email',
+            htmlBody: html
+        };
+
+        const isSent = await this.EmailService.sendEmail(options);
+
+        if(!isSent) throw CustomError.InternalError("Email was not sent");
+        return true;
     }
 }

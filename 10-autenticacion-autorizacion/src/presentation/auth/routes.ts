@@ -1,5 +1,7 @@
 import { Router } from 'express';
+import { envs } from '../../config';
 import { AuthService } from '../services/auth.service';
+import { EmailService } from '../services/email.service';
 import { AuthController } from './controller';
 
 
@@ -11,7 +13,8 @@ export class AuthRoutes {
 
     static get routes(): Router {
 
-        const authService = new AuthService();
+        const emailService: EmailService = new EmailService(envs.MAILER_SERVICE,envs.MAILER_EMAIL, envs.MAILER_SECRET_KEY);
+        const authService = new AuthService(emailService);
         const {
             login,
             validateEmail,

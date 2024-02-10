@@ -57,8 +57,11 @@ export class AuthController {
 
     validateEmail = (req:Request, res: Response) => {
 
+
+        const { token } = req.params;
+
         res.json({
-            message: "email"
+            message: token
         })
     };
 
