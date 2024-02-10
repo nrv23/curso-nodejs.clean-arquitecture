@@ -1,6 +1,6 @@
 import { CustomError } from './../../domain/errors/custom.error';
 import { Request, Response } from 'express';
-import { RegisterUserDto } from '../../domain';
+import { LoginDto, RegisterUserDto } from '../../domain';
 import { AuthService } from '../services/auth.service';
 import { MongoDatabase } from '../../data/mongo/mongo-database';
 
@@ -41,9 +41,17 @@ export class AuthController {
 
     login = (req:Request, res: Response) => {
 
-        res.json({
-            message: "login"
-        })
+        const [error,dto] = LoginDto.create(req.body);
+
+        if(error) return res.status(400).json({error});
+
+        this.authService.loginUser(dto!)
+            .then(response => {
+                return res.status(200).json(response);
+            })
+            .catch(err => {
+                return this.handleError(err,res);
+            })
     };
 
 
