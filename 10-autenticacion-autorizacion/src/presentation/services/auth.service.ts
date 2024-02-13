@@ -76,6 +76,35 @@ export class AuthService {
         }
     }
 
+    public validateEmail = async (token: string) => {
+
+        const payload = await jwtAdapter.validateToken(token); 
+
+       if(!payload) throw CustomError.Unauthorize("Invalid Token");
+       
+       const { email } = payload as { email: string };
+
+       if(!email) throw CustomError.InternalError("Invalid token payload");
+
+       // actualizar la bandera para validar el email 
+
+       const user = await UserModel.findOne({
+           email
+       });
+
+       if(!user ) throw CustomError.BadRequest("User not exist");
+
+       const updated = await UserModel.updateOne({
+           email
+       },{
+           emailValidated: true
+       });
+
+       if(updated.modifiedCount === 0) throw CustomError.InternalError("Cannot update email validation status");
+
+       return true;
+    }
+
     private sendEmailValidationLink = async (email: string) =>  {
 
         const token = await jwtAdapter.genereteToken({
