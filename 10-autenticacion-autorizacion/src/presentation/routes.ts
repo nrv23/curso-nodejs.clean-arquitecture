@@ -2,6 +2,7 @@ import { Router } from 'express';
 import { AuthRoutes } from './auth/routes';
 import { CategoryRoutes } from './categories/routes';
 import { AuthMiddleware } from './middlewares/auth.middleware';
+import { ProductRoutes } from './products/routes';
 
 
 
@@ -18,6 +19,7 @@ export class AppRoutes {
 
     router.use("/auth", AuthRoutes.routes);
     router.use("/category", AuthMiddleware.validateJWT, CategoryRoutes.routes);
+    router.use('/product', AuthMiddleware.validateJWT, ProductRoutes.routes);
 
     return router;
   }
