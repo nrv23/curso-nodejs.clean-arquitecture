@@ -1,6 +1,9 @@
 import express from 'express';
 import { envs } from './config';
 import { GithubController } from './presentation/github/controller';
+import { GithubSha256Middleware } from './presentation/middlewares/gitbub-sha-256.middleware';
+import { DiscordService } from './presentation/services/discord.service';
+import { GtihubService } from './presentation/services/github.service';
 
 
 
@@ -13,9 +16,13 @@ import { GithubController } from './presentation/github/controller';
 function main() {
 
     const app = express();
-    const { webHookHandler } = new GithubController();
+    app.use(express.json());
 
-    app.post('/api/github', webHookHandler);
+    const githubService = new GtihubService();
+    const discordService = new DiscordService();
+    const { webHookHandler } = new GithubController(githubService, discordService);
+
+    app.post('/api/github', GithubSha256Middleware.verifySignature, webHookHandler);
     app.listen(envs.PORT, () => {
         console.log("Servidor corriendo en puerto " + envs.PORT);
     });
