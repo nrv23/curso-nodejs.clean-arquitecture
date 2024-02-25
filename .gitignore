@@ -12,3 +12,5 @@ notas.txt
 **/coverage
 **/dist
 **/build
+# Local Netlify folder
+.netlify
