@@ -1,5 +1,6 @@
 import { ITicket } from '../../domain/interfaces/ticket.interface';
 import { UuidAdapter } from '../../config/uuid.adapter';
+import { WssService } from './wss.service';
 
 
 export class TicketService {
@@ -7,7 +8,9 @@ export class TicketService {
 
     public readonly tickets: ITicket[] = [];
 
-    constructor() {
+    constructor(
+        private readonly socket = WssService.instance
+    ) {
 
     }
 
@@ -29,9 +32,8 @@ export class TicketService {
         }
 
         this.tickets.push(ticket);
-
         // conectar con ws
-
+        this.onTicketNumberCHanged();
         return ticket;
     }
 
@@ -80,6 +82,12 @@ export class TicketService {
         return {
             status: "ok"
         };
+    }
+
+
+    private onTicketNumberCHanged() {
+        console.log(this.getPendingTickets.length);
+        this.socket.sendMessage("on-ticket-count-changed", this.getPendingTickets().length);
     }
 
 }
