@@ -6,7 +6,7 @@ import { WssService } from './wss.service';
 export class TicketService {
 
 
-    public readonly tickets: ITicket[] = [];
+    public tickets: ITicket[] = [];
 
     constructor(
         private readonly socket = WssService.instance
@@ -62,6 +62,8 @@ export class TicketService {
         this.workingOnTickets.unshift({ ...ticket });
 
         // notificar al ws que el ticket se esta trabajando
+        this.onTicketNumberCHanged();
+        this.onWorkingOnChanged();
 
         return { ticket, status: "ok" };
 
@@ -73,7 +75,7 @@ export class TicketService {
 
         if (!ticket) return { status: "error", message: "There is not ticket with this id" };
 
-        this.tickets.map(t => {
+        this.tickets = this.tickets.map(t => {
             if (t.id === ticketId) t.done = true;
 
             return t;
@@ -88,6 +90,12 @@ export class TicketService {
     private onTicketNumberCHanged() {
         console.log(this.getPendingTickets.length);
         this.socket.sendMessage("on-ticket-count-changed", this.getPendingTickets().length);
+    }
+
+    //-- --------------------------------------------------
+
+    private onWorkingOnChanged() {
+        this.socket.sendMessage("on-working-changed", this.listWorkingOnTickets);
     }
 
 }

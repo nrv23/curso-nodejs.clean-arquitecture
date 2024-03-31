@@ -34,7 +34,7 @@ export class TicketController {
         const { desk } = req.params;
 
         res.json({
-            ticket: this.ticketService.drawTicket(desk)
+            ...this.ticketService.drawTicket(desk)
         });
     }
 
@@ -43,7 +43,7 @@ export class TicketController {
         const { ticketId } = req.params;
 
         res.json({
-            ticket: this.ticketService.onFinishedTicket(ticketId)
+            ...this.ticketService.onFinishedTicket(ticketId)
         });
     }
 
